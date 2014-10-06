@@ -1,27 +1,30 @@
- /*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2010-2014 CNES - CENTRE NATIONAL d'ETUDES SPATIALES
  *
  * This file is part of SITools2.
  *
- * SITools2 is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * SITools2 is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * SITools2 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * SITools2 is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with SITools2.  If not, see <http://www.gnu.org/licenses/>.
- ******************************************************************************/
+ * You should have received a copy of the GNU General Public License along with
+ * SITools2. If not, see <http://www.gnu.org/licenses/>.
+ * ****************************************************************************
+ */
 package fr.cnes.sitools.extensions.common;
 
+import static fr.cnes.sitools.extensions.common.NumberValidation.isANumber;
 import java.util.Map;
 
 /**
  * Validates a geospatial keyword.
+ *
  * @see Package Decorator pattern
  * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
@@ -54,6 +57,7 @@ public class SpatialGeoValidation extends NumberArrayValidation {
 
     /**
      * Create a geospatial validation decorator.
+     *
      * @param validation validation
      * @param keyword keyword that contains the polygon
      * @param indexLongVal index in the polygon for longitude coord
@@ -62,7 +66,7 @@ public class SpatialGeoValidation extends NumberArrayValidation {
      * @param decRangeVal DEC range validity
      */
     public SpatialGeoValidation(final Validation validation, final String keyword, final int indexLongVal, final int indexLatVal,
-                                final double[] raRangeVal, final double[] decRangeVal) {
+            final double[] raRangeVal, final double[] decRangeVal) {
         super(validation, keyword, ",", 2);
         setIndexLat(indexLatVal);
         setIndexLong(indexLongVal);
@@ -76,13 +80,21 @@ public class SpatialGeoValidation extends NumberArrayValidation {
         final String value = getMap().get(this.getKeywordToTest());
         final String[] array = value.split(getSplitChar());
         if (error.isEmpty()) {
-            final double valRa = Double.valueOf(array[getIndexLong()]);
-            final double valDec = Double.valueOf(array[getIndexLat()]);
-            if (valRa < getRaRange()[MIN] || valRa > getRaRange()[MAX]) {
-                error.put(getKeywordToTest(), "RA (=" + valRa + ") must be in [" + getRaRange()[MIN] + "," + getRaRange()[MAX] + "]");
+            if (!isANumber(array[getIndexLong()])) {
+                error.put(getKeywordToTest(), "RA must be a number");
+            } else {
+                final double valRa = Double.valueOf(array[getIndexLong()]);
+                if (valRa < getRaRange()[MIN] || valRa > getRaRange()[MAX]) {
+                    error.put(getKeywordToTest(), "RA (=" + valRa + ") must be in [" + getRaRange()[MIN] + "," + getRaRange()[MAX] + "]");
+                }
             }
-            if (valDec < getDecRange()[MIN] || valDec > getDecRange()[MAX]) {
-                error.put(getKeywordToTest(), "Dec (=" + valDec + ") must be in [" + getDecRange()[MIN] + "," + getDecRange()[MAX] + "]");
+            if (!isANumber(array[getIndexLat()])) {
+                error.put(getKeywordToTest(), "DEC must be a number");
+            } else {
+                final double valDec = Double.valueOf(array[getIndexLat()]);
+                if (valDec < getDecRange()[MIN] || valDec > getDecRange()[MAX]) {
+                    error.put(getKeywordToTest(), "Dec (=" + valDec + ") must be in [" + getDecRange()[MIN] + "," + getDecRange()[MAX] + "]");
+                }
             }
         }
         return error;
@@ -90,6 +102,7 @@ public class SpatialGeoValidation extends NumberArrayValidation {
 
     /**
      * Returns the indexLong.
+     *
      * @return the indexLong
      */
     protected final int getIndexLong() {
@@ -98,6 +111,7 @@ public class SpatialGeoValidation extends NumberArrayValidation {
 
     /**
      * Sets the indexLong.
+     *
      * @param indexLongVal the indexLong to set
      */
     protected final void setIndexLong(final int indexLongVal) {
@@ -106,6 +120,7 @@ public class SpatialGeoValidation extends NumberArrayValidation {
 
     /**
      * Sets the indexLat.
+     *
      * @return the indexLat
      */
     protected final int getIndexLat() {
@@ -114,6 +129,7 @@ public class SpatialGeoValidation extends NumberArrayValidation {
 
     /**
      * Sets the indexLat.
+     *
      * @param indexLatVal the indexLat to set
      */
     protected final void setIndexLat(final int indexLatVal) {
@@ -122,6 +138,7 @@ public class SpatialGeoValidation extends NumberArrayValidation {
 
     /**
      * Returns the RA range.
+     *
      * @return the raRange
      */
     protected final double[] getRaRange() {
@@ -130,6 +147,7 @@ public class SpatialGeoValidation extends NumberArrayValidation {
 
     /**
      * Returns the ra range.
+     *
      * @param raRangeVal the raRange to set
      */
     protected final void setRaRange(final double[] raRangeVal) {
@@ -138,6 +156,7 @@ public class SpatialGeoValidation extends NumberArrayValidation {
 
     /**
      * Returns the dec range.
+     *
      * @return the decRange
      */
     protected final double[] getDecRange() {
@@ -146,6 +165,7 @@ public class SpatialGeoValidation extends NumberArrayValidation {
 
     /**
      * Sets the dec range.
+     *
      * @param decRangeVal the decRange to set
      */
     protected final void setDecRange(final double[] decRangeVal) {

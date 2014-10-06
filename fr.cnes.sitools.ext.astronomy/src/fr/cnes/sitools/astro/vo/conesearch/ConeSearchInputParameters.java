@@ -149,8 +149,7 @@ public class ConeSearchInputParameters implements ConeSearchDataModelInterface {
         final Set<Entry<String, String>> entries = errors.entrySet();
         for (Entry<String, String> entry : entries) {
             final Info info = new Info();
-            info.setID(entry.getKey());
-            info.setName("Error in " + entry.getKey());
+            info.setName("Error");
             info.setValueAttribute("Error in input " + entry.getKey() + ": " + entry.getValue());
             infos.add(info);
             LOG.log(Level.FINEST, "{0}: {1}", new Object[]{entry.getKey(), entry.getValue()});
